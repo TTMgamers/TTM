@@ -1,47 +1,45 @@
-let levelling = require('../lib/levelling')
-let { MessageType } = require('@adiwajshing/baileys')
 let fs = require('fs')
 let path = require('path')
-let fetch = require('node-fetch')
-let moment = require('moment-timezone')
+let levelling = require('../lib/levelling')
 const defaultMenu = {
   before: `
-┌─〔 %me 〕
-├ Hai, %name!
-│
-├ Tersisa *%limit Limit*
-├ Role *%role*
-├ Level *%level (%exp / %maxexp)* [%xp4levelup]
-├ %totalexp XP secara Total
-│ 
-├ Tanggal: *%week %weton, %date*
-├ Tanggal Islam: *%dateIslamic*
-├ Waktu: *%time*
-│
-├ Uptime: *%uptime (%muptime)*
-├ Database: %rtotalreg dari %totalreg
-├ Github:
-├ %github
-└────
+  ◪ ==〔 %me 〕=>
+╭─❏ ❗ INFO USER
+│➤ Hai, %name!
+│➤ *Bantu Donasi SeIklasnya Untuk Beli Api-Key*
+│➤ Tersisa *%limit Limit*
+│➤ Role *%role*
+│➤ Level *%level (%exp / %maxexp)* [%xp4levelup]
+╰─────────────❏\n
+╭─❏ ❗ INFO WAKTU
+│➤ *Tanggal* : *%week %weton, %date*
+│➤ *Tanggal Islam* : *%dateIslamic*
+│➤ *Jam* : %time*
+╰─────────────❏\n
+╭─❏ ❗ INFO
+│➤ *Uptime* : *%uptime (%muptime)*
+│➤ *Database* : %rtotalreg dari %totalreg
+│➤ *Group WhatsApp Bot* : tidak ada
+╰─────────────❏\n
 %readmore`.trimStart(),
-  header: '┌─〔 %category 〕',
-  body: '├ %cmd %islimit %isPremium',
-  footer: '└────\n',
+  header: '╭─❏ ❗〔 %category 〕',
+  body: '│➤ %cmd %islimit %isPremium',
+  footer: '╰─────────────❏\n',
   after: `
-*%npmname@^%version*
-${'```%npmdesc```'}
+%me
 `,
 }
 let handler = async (m, { conn, usedPrefix: _p, args, command }) => {
   let tags
   let teks = `${args[0]}`.toLowerCase()
-  let arrayMenu = ['all', 'game', 'xp', 'stiker', 'kerangajaib', 'quotes', 'admin', 'grup', 'premium', 'internet', 'anonymous', 'nulis', 'downloader', 'tools', 'fun', 'database', 'quran', 'audio', 'jadibot', 'info', 'tanpakategori', 'owner']
-  if (!arrayMenu.includes(teks)) teks = '404'
   if (teks == 'all') tags = {
     'main': 'Utama',
+    'quran': 'Al Qur\'an',
+    'info': 'Info',
     'game': 'Game',
     'xp': 'Exp & Limit',
     'sticker': 'Stiker',
+	'rpg': 'Epic RPG',
     'kerang': 'Kerang Ajaib',
     'quotes': 'Quotes',
     'admin': `Admin ${global.opts['restrict'] ? '' : '(Dinonaktifkan)'}`,
@@ -56,10 +54,8 @@ let handler = async (m, { conn, usedPrefix: _p, args, command }) => {
     'database': 'Database',
     'vote': 'Voting',
     'absen': 'Absen',
-    'quran': 'Al Qur\'an',
     'audio': 'Pengubah Suara',
     'jadibot': 'Jadi Bot',
-    'info': 'Info',
     '': 'Tanpa Kategori',
   }
   if (teks == 'game') tags = {
@@ -71,7 +67,10 @@ let handler = async (m, { conn, usedPrefix: _p, args, command }) => {
   if (teks == 'stiker') tags = {
     'sticker': 'Stiker'
   }
-  if (teks == 'kerangajaib') tags = {
+    if (teks == 'rpg') tags = {
+    'rpg': 'Epic RPG'
+  }
+  if (teks == 'kerang') tags = {
     'kerang': 'Kerang Ajaib'
   }
   if (teks == 'quotes') tags = {
@@ -132,7 +131,154 @@ let handler = async (m, { conn, usedPrefix: _p, args, command }) => {
     'advanced': 'Advanced'
   }
 
+  if (!args[0]) {
+    conn.relayWAMessage(conn.prepareMessageFromContent(m.chat, {
+      "listMessage": {
+        "title": "List Menu",
+        "description": "© NASA BOT",
+        "buttonText": "Click Disini !!",
+        "listType": "SINGLE_SELECT",
+        "sections": [
+          {
+            "rows": [
+              {
+                "title": `Semua Perintah`,
+                "description": "",
+                "rowId": ".? all"
+              }, {
+                "title": "Game",
+                "description": "",
+                "rowId": ".? game"
 
+              }, {
+                "title": "XP",
+                "description": "",
+                "rowId": ".? xp"
+
+              }, {
+                "title": "Stiker",
+                "description": "",
+                "rowId": ".? stiker"
+              }, {
+                "title": "rpg",
+                "description": "",
+                "rowId": ".? rpg"
+              }, {
+                "title": "Kerang Ajaib",
+                "description": "",
+                "rowId": ".? kerang"
+              }, {
+                "title": "Quotes",
+                "description": "",
+                "rowId": ".? quotes"
+              }, {
+                "title": "Admin",
+                "description": "",
+                "rowId": ".? admin"
+              }, {
+                "title": "Grup",
+                "description": "",
+                "rowId": ".? grup"
+              }, {
+                "title": "Premium",
+                "description": "",
+                "rowId": ".? premium"
+              }, {
+                "title": "Internet",
+                "description": "",
+                "rowId": ".? internet"
+              }, {
+                "title": "Anonymous",
+                "description": "",
+                "rowId": ".? anonymous"
+              }, {
+                "title": "Nulis & Logo",
+                "description": "",
+                "rowId": ".? nulis"
+              }, {
+                "title": "Downloader",
+                "description": "",
+                "rowId": ".? downloader"
+              }, {
+                "title": "Tools",
+                "description": "",
+                "rowId": ".? tools"
+              }, {
+                "title": "Fun",
+                "description": "",
+                "rowId": ".? fun"
+              }, {
+                "title": "Database",
+                "description": "",
+                "rowId": ".? database"
+              }, {
+                "title": "Vote & Absen",
+                "description": "",
+                "rowId": ".? vote"
+              }, {
+                "title": "Al-Qur\'an",
+                "description": "",
+                "rowId": ".? quran"
+              }, {
+                "title": "Pengubah Suara",
+                "description": "",
+                "rowId": ".? audio"
+              }, {
+                "title": "Jadi Bot",
+                "description": "",
+                "rowId": ".? jadibot"
+              }, {
+                "title": "Info",
+                "description": "",
+                "rowId": ".? info"
+              }, {
+                "title": "Tanpa Kategori",
+                "description": "",
+                "rowId": ".? tanpakategori"
+              }, {
+                "title": "Owner",
+                "description": "",
+                "rowId": ".? owner"
+              }
+            ]
+          }
+        ], "contextInfo": {
+          "stanzaId": m.key.id,
+          "participant": m.sender,
+          "quotedMessage": m.message
+        }
+      }
+    }, {}), { waitForAck: true })
+    throw 0
+  }
+  //   throw `
+  // ┌〔 DAFTAR MENU 〕
+  // ├ ${_p + command} all
+  // ├ ${_p + command} game
+  // ├ ${_p + command} xp
+  // ├ ${_p + command} stiker
+  // ├ ${_p + command} rpg
+  // ├ ${_p + command} kerang
+  // ├ ${_p + command} quotes
+  // ├ ${_p + command} admin
+  // ├ ${_p + command} group
+  // ├ ${_p + command} premium
+  // ├ ${_p + command} internet
+  // ├ ${_p + command} anonymous
+  // ├ ${_p + command} nulis
+  // ├ ${_p + command} downloader
+  // ├ ${_p + command} tools
+  // ├ ${_p + command} fun
+  // ├ ${_p + command} database
+  // ├ ${_p + command} vote
+  // ├ ${_p + command} quran
+  // ├ ${_p + command} audio
+  // ├ ${_p + command} jadibot
+  // ├ ${_p + command} info
+  // ├ ${_p + command} tanpa kategori
+  // ├ ${_p + command} owner
+  // └────  
+  //     `.trim()
 
   try {
     let package = JSON.parse(await fs.promises.readFile(path.join(__dirname, '../package.json')).catch(_ => '{}'))
@@ -185,149 +331,6 @@ let handler = async (m, { conn, usedPrefix: _p, args, command }) => {
         enabled: !plugin.disabled,
       }
     })
-    if (teks == '404') {
-      return conn.relayWAMessage(conn.prepareMessageFromContent(m.chat, {
-        "listMessage": {
-          "title": `${ucapan()}, ${name}`.trim(),
-          "description": "© stikerin",
-          "buttonText": "Klik Disini",
-          "listType": "SINGLE_SELECT",
-          "sections": [
-            {
-              "rows": [
-                {
-                  "title": `Semua Perintah`,
-                  "description": "",
-                  "rowId": `${_p}? all`
-                }, {
-                  "title": "Game",
-                  "description": "",
-                  "rowId": `${_p}? game`
-
-                }, {
-                  "title": "XP",
-                  "description": "",
-                  "rowId": `${_p}? xp`
-
-                }, {
-                  "title": "Stiker",
-                  "description": "",
-                  "rowId": `${_p}? stiker`
-                }, {
-                  "title": "Kerang Ajaib",
-                  "description": "",
-                  "rowId": `${_p}? kerangajaib`
-                }, {
-                  "title": "Quotes",
-                  "description": "",
-                  "rowId": `${_p}? quotes`
-                }, {
-                  "title": "Admin",
-                  "description": "",
-                  "rowId": `${_p}? admin`
-                }, {
-                  "title": "Grup",
-                  "description": "",
-                  "rowId": `${_p}? grup`
-                }, {
-                  "title": "Premium",
-                  "description": "",
-                  "rowId": `${_p}? premium`
-                }, {
-                  "title": "Internet",
-                  "description": "",
-                  "rowId": `${_p}? internet`
-                }, {
-                  "title": "Anonymous",
-                  "description": "",
-                  "rowId": `${_p}? anonymous`
-                }, {
-                  "title": "Nulis & Logo",
-                  "description": "",
-                  "rowId": `${_p}? nulis`
-                }, {
-                  "title": "Downloader",
-                  "description": "",
-                  "rowId": `${_p}? downloader`
-                }, {
-                  "title": "Tools",
-                  "description": "",
-                  "rowId": `${_p}? tools`
-                }, {
-                  "title": "Fun",
-                  "description": "",
-                  "rowId": `${_p}? fun`
-                }, {
-                  "title": "Database",
-                  "description": "",
-                  "rowId": `${_p}? database`
-                }, {
-                  "title": "Vote & Absen",
-                  "description": "",
-                  "rowId": `${_p}? vote`
-                }, {
-                  "title": "Al-Qur\'an",
-                  "description": "",
-                  "rowId": `${_p}? quran`
-                }, {
-                  "title": "Pengubah Suara",
-                  "description": "",
-                  "rowId": `${_p}? audio`
-                }, {
-                  "title": "Jadi Bot",
-                  "description": "",
-                  "rowId": `${_p}? jadibot`
-                }, {
-                  "title": "Info",
-                  "description": "",
-                  "rowId": `${_p}? info`
-                }, {
-                  "title": "Tanpa Kategori",
-                  "description": "",
-                  "rowId": `${_p}? tanpakategori`
-                }, {
-                  "title": "Owner",
-                  "description": "",
-                  "rowId": `${_p}? owner`
-                }
-              ]
-            }
-          ], "contextInfo": {
-            "stanzaId": m.key.id,
-            "participant": m.sender,
-            "quotedMessage": m.message
-          }
-        }
-      }, {}), { waitForAck: true })
-    }
-    // gunakan ini jika kamu menggunakan whatsapp bisnis
-    //   throw `
-    // ┌〔 DAFTAR MENU 〕
-    // ├ ${_p + command} all
-    // ├ ${_p + command} game
-    // ├ ${_p + command} xp
-    // ├ ${_p + command} stiker
-    // ├ ${_p + command} kerang
-    // ├ ${_p + command} quotes
-    // ├ ${_p + command} admin
-    // ├ ${_p + command} group
-    // ├ ${_p + command} premium
-    // ├ ${_p + command} internet
-    // ├ ${_p + command} anonymous
-    // ├ ${_p + command} nulis
-    // ├ ${_p + command} downloader
-    // ├ ${_p + command} tools
-    // ├ ${_p + command} fun
-    // ├ ${_p + command} database
-    // ├ ${_p + command} vote
-    // ├ ${_p + command} quran
-    // ├ ${_p + command} audio
-    // ├ ${_p + command} jadibot
-    // ├ ${_p + command} info
-    // ├ ${_p + command} tanpa kategori
-    // ├ ${_p + command} owner
-    // └────  
-    //     `.trim()
     let groups = {}
     for (let tag in tags) {
       groups[tag] = []
@@ -377,20 +380,21 @@ let handler = async (m, { conn, usedPrefix: _p, args, command }) => {
       readmore: readMore
     }
     text = text.replace(new RegExp(`%(${Object.keys(replace).sort((a, b) => b.length - a.length).join`|`})`, 'g'), (_, name) => '' + replace[name])
-    await conn.send2ButtonLoc(m.chat, await (await fetch(fla + teks)).buffer(), text.trim(), 'made with ❤️ by ariffb', 'Pemilik Bot', `${_p}owner`, 'Donasi', `${_p}donasi`, m)
+    await conn.send2Button(m.chat, text.trim(), '© Copyright Nasa Bot 🛸\nOwner: KeylaCans\nThanks To:\nNurutomo-BochilGaming-Idham-Ariffb-Marvell', 'PEMILIK BOT', '.owner', 'DONASI', '.donasi', { quoted: m })
   } catch (e) {
     conn.reply(m.chat, 'Maaf, menu sedang error', m)
     throw e
   }
 }
-handler.help = ['menu', 'help', '?']
+handler.help = ['menu', 'help', '?', 'nasa']
 handler.tags = ['main']
-handler.command = /^(menu|help|\?)$/i
+handler.command = /^(menu|help|nasa|\?)$/i
 handler.owner = false
 handler.mods = false
 handler.premium = false
 handler.group = false
 handler.private = false
+handler.register = true
 
 handler.admin = false
 handler.botAdmin = false
@@ -408,21 +412,4 @@ function clockString(ms) {
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
   let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
   return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
-}
-function ucapan() {
-  const time = moment.tz('Asia/Jakarta').format('HH')
-  res = "Selamat dinihari"
-  if (time >= 4) {
-    res = "Selamat pagi"
-  }
-  if (time > 10) {
-    res = "Selamat siang"
-  }
-  if (time >= 15) {
-    res = "Selamat sore"
-  }
-  if (time >= 18) {
-    res = "Selamat malam"
-  }
-  return res
 }

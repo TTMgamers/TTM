@@ -1,10 +1,17 @@
-let fetch = require('node-fetch')
-let handler = async (m, { conn }) => await conn.sendButtonLoc(m.chat, await (await fetch(fla + 'donasi')).buffer(), `
-┌〔 Donasi • Emoney 〕
-├ https://saweria.co/ariffb
-├ https://trakteer.id/ariffb/tip
+let handler = async m => m.reply(`
+┌〔 Donasi • Pulsa 〕
+├ TELKOM [6285240389682]
 └────
-`.trim(), '© stikerin', 'Donasi', '.donasi', m)
+
+┌〔 Donasi • Emoney 〕
+├ DANA [6285240389682]
+└────
+
+┌〔 Donasi • Link 〕
+├ saweria : -
+└────
+Dukung Keyla hanya dengan membuka link dibawah ini, dan ikuti tujuannya
+`.trim())
 handler.help = ['donasi']
 handler.tags = ['info']
 handler.command = /^dona(te|si)$/i
